@@ -28,19 +28,49 @@ function setBackupPath {
     saveConfig
 }
 
+function actionAddRom {
+    $romsList = $window.FindName("romsList")
+    $selectedRomName = $window.FindName("selectedRomName")
+    if ($selectedRomName.Text -eq "") {return}
+    # Add Rom name to config file
+    $newRom = [PSCustomObject]@{
+        name=$selectedRomName.Text
+        paths=@()
+    }
+    $config.ROMs += $newRom
+    saveConfig
+    # Add Rom name to list
+    $romsList.AddChild($selectedRomName.Text)
+    $romsList.SelectedIndex = ($romsList.Items.Count-1)
+    # Create new Rom backup folder
+    $backupGamePath = "$($config.backup)\$($selectedRomName.Text)"
+    if (-Not (Test-Path $backupGamePath)) {
+        New-Item -Path $backupGamePath -ItemType Directory | Out-Null
+    }
+    loadSelectedRom
+    # Reset form
+    $selectedRomName.Text = ""
+}
+function actionModifyRom {}
+function actionDeleteRom {}
 function initRomsList {
     $romsListSyncAllBtn = $window.FindName("romsListSyncAllBtn")
-    # $loadSaveBtn = $window.FindName("loadSaveBtn")
-    # $importSaveBtn = $window.FindName("importSaveBtn")
+    $romsListAddBtn = $window.FindName("romsListAddBtn")
+    $romsListModifyBtn = $window.FindName("romsListModifyBtn")
+    $romsListRemoveBtn = $window.FindName("romsListRemoveBtn")
 
     $romsListSyncAllBtn.Add_Click({
         syncAll
         loadSelectedRom
     })
 
+    $romsListAddBtn.Add_Click({actionAddRom})
+    $romsListModifyBtn.Add_Click({actionModifyRom})
+    $romsListRemoveBtn.Add_Click({actionDeleteRom})
+
 
     For($i=0 ; $i -lt $config.ROMs.length ; $i++) {
-        $romsList.Items.Add($config.ROMs[$i].name) | Out-Null
+        $romsList.AddChild($config.ROMs[$i].name)
     }
     $romsList.SelectedIndex = 0
     loadSelectedRom
@@ -146,7 +176,7 @@ function loadSelectedRomPath {
 function syncAll {
     $romsList = $window.FindName("romsList")
     $savedActive = $romsList.SelectedIndex
-    for ($i = 0; $i -lt $romsList.Count; $i++) {
+    for ($i = 0; $i -lt $romsList.Items.Count; $i++) {
         $romsList.SelectedIndex = $i
         syncMostRecentSave
     }
