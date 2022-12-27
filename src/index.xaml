@@ -1,0 +1,56 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Window" Title="SyncRom">
+
+    <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Vertical" Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="backupPathLabel" Text="Backup folder" Margin="10" Width="73" Height="20"/>
+                <TextBox x:Name="backupPath" Width="200" Margin="10" Height="20"/>
+                <Button x:Name="backupPathBtn" Content="Choose Folder" Margin="10" Height="20" Width="81"/>
+            </StackPanel>
+            <ListBox x:Name="romsList" Height="270"></ListBox>
+            <TextBlock x:Name="romsListSelected"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="romsListAddBtn" Content="Add Rom" Margin="10" Height="20" Width="81" IsEnabled="False"/>
+                <Button x:Name="romsListRemoveBtn" Content="Delete Rom" Margin="10" Height="20" Width="81" IsEnabled="False"/>
+                <Button x:Name="romsListSyncAllBtn" Content="Synchronize All" Margin="10" Height="20" Width="91"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Separator/>
+
+        <StackPanel Orientation="Vertical" Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="activeRomName" Margin="2" Height="20"/>
+                <Button x:Name="syncSaveBtn" Content="Sync Latest" Margin="2" Height="20" Width="81"/>
+                <Button x:Name="loadSaveBtn" Content="Load Save" Margin="2" Height="20" Width="81"/>
+                <Button x:Name="importSaveBtn" Content="Import Save" Margin="2" Height="20" Width="81" IsEnabled="False"/>
+            </StackPanel>
+            <!-- <ListBox x:Name="savesList"></ListBox> -->
+            <ListBox Name="savesList" HorizontalContentAlignment="Stretch" Height="200" Margin="2">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding savedName}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <TextBlock Text="Paths to main files"/>
+            <ListBox Name="listBoxRomPaths" HorizontalContentAlignment="Stretch" Height="70" Margin="2">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding romPath}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBox Name="selectedRomPath" Text="" Margin="2"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="addMainPathBtn" Content="Add" Margin="2" Height="20" Width="81"/>
+                <Button x:Name="modifyMainPathBtn" Content="Modify" Margin="2" Height="20" Width="81"/>
+                <Button x:Name="deleteMainPathBtn" Content="Delete" Margin="2" Height="20" Width="81"/>
+                <Button x:Name="cancelMainPathBtn" Content="Cancel" Margin="2" Height="20" Width="81"/>
+            </StackPanel>
+
+        </StackPanel>
+    </StackPanel>
+
+</Window>

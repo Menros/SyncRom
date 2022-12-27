@@ -1,0 +1,19 @@
+{
+    "version":  "0.0.1",
+    "backup":  "C:\\Users\\Menros\\Documents\\SyncRom\\Save",
+    "ROMs":  [
+                 {
+                     "name":  "Pokemon Violet",
+                     "paths":  [
+                                   "C:\\Users\\Menros\\Documents\\SyncRom\\Roms\\Ryujinx\\main",
+                                   "C:\\Users\\Menros\\Documents\\SyncRoms\\Roms\\Yuzu\\main"
+                               ]
+                 },
+                 {
+                     "name":  "Pokemon Legends Arceus",
+                     "paths":  [
+                                   "C:\\Users\\Menros\\Documents\\SyncRom\\Roms\\Ryujinx\\main"
+                               ]
+                 }
+             ]
+}
