@@ -8,12 +8,12 @@ $path = ".\build"
 if (-Not (Test-Path $path)) {
     New-Item -Path $path -ItemType Directory | Out-Null
 }
-Get-ChildItem -Path $path -Include * -File -Recurse | ForEach-Object { $_.Delete()}
+Get-ChildItem -Path $path -Include * -Recurse | ForEach-Object { $_.Delete()}
 $path = ".\out"
 if (-Not (Test-Path $path)) {
     New-Item -Path $path -ItemType Directory | Out-Null
 }
-Get-ChildItem -Path $path -Include * -File -Recurse | ForEach-Object { $_.Delete()}
+Get-ChildItem -Path $path -Include * -Recurse | ForEach-Object { $_.Delete()}
 
 # copy app icon to build folder
 Copy-Item .\src\icon.ico -Destination .\build\icon.ico -Force
