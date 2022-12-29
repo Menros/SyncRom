@@ -32,6 +32,7 @@ function setBackupPath {
 }
 
 function actionAddRom {
+    if (secureConfigNotConfigured) {return}
     $romsList = $window.FindName("romsList")
     $selectedRomName = $window.FindName("selectedRomName")
     if ($selectedRomName.Text -eq "") {return}
@@ -54,8 +55,12 @@ function actionAddRom {
     # Reset form
     $selectedRomName.Text = ""
 }
-function actionModifyRom {}
-function actionDeleteRom {}
+function actionModifyRom {
+    if (secureConfigNotConfigured) {return}
+}
+function actionDeleteRom {
+    if (secureConfigNotConfigured) {return}
+}
 function initRomsList {
     $romsListSyncAllBtn = $window.FindName("romsListSyncAllBtn")
     $romsListAddBtn = $window.FindName("romsListAddBtn")
@@ -81,6 +86,7 @@ function initRomsList {
 
 function checkMainPathValidity {
     $selectedRomPath = $window.FindName("selectedRomPath")
+    if ($selectedRomPath.Text -eq "") {return}
     if (-not($selectedRomPath.Text -like "*\main")) {
         if (-not($selectedRomPath.Text -like "*\")) {
             $selectedRomPath.Text += "\main"
@@ -97,6 +103,7 @@ function initRomPath {
     $cancelMainPathBtn = $window.FindName("cancelMainPathBtn")
     
     $addMainPathBtn.Add_Click({
+        if (secureConfigNotConfigured) {return}
         checkMainPathValidity
         $listBoxRomPaths = $window.FindName("listBoxRomPaths")
         $selectedRomPath = $window.FindName("selectedRomPath")
@@ -108,6 +115,7 @@ function initRomPath {
         }
     })
     $modifyMainPathBtn.Add_Click({
+        if (secureConfigNotConfigured) {return}
         checkMainPathValidity
         $listBoxRomPaths = $window.FindName("listBoxRomPaths")
         $selectedRomPath = $window.FindName("selectedRomPath")
@@ -119,6 +127,7 @@ function initRomPath {
         }
     })
     $deleteMainPathBtn.Add_Click({
+        if (secureConfigNotConfigured) {return}
         $listBoxRomPaths = $window.FindName("listBoxRomPaths")
         $selectedRomPath = $window.FindName("selectedRomPath")
         if ($listBoxRomPaths.SelectedIndex -eq -1) {
