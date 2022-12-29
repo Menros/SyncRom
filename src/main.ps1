@@ -20,7 +20,9 @@ function secureConfigNotConfigured {
     $savesList = $window.FindName("savesList")
     $syncSaveBtn = $window.FindName("syncSaveBtn")
     $loadSaveBtn = $window.FindName("loadSaveBtn")
-    $importSaveBtn = $window.FindName("importSaveBtn")
+    # $renameSaveBtn = $window.FindName("renameSaveBtn")
+    # $deleteSaveBtn = $window.FindName("deleteSaveBtn")
+    # $importSaveBtn = $window.FindName("importSaveBtn")
 
     $listBoxRomPaths = $window.FindName("listBoxRomPaths")
     $addMainPathBtn = $window.FindName("addMainPathBtn")
@@ -36,7 +38,9 @@ function secureConfigNotConfigured {
     $savesList.IsEnabled = $false
     $syncSaveBtn.IsEnabled = $false
     $loadSaveBtn.IsEnabled = $false
-    $importSaveBtn.IsEnabled = $false
+    # $renameSaveBtn.IsEnabled = $false
+    # $deleteSaveBtn.IsEnabled = $false
+    # $importSaveBtn.IsEnabled = $false
     $listBoxRomPaths.IsEnabled = $false
     $addMainPathBtn.IsEnabled = $false
     $modifyMainPathBtn.IsEnabled = $false
@@ -54,7 +58,9 @@ function secureConfigNotConfigured {
             $savesList.IsEnabled = $true
             $syncSaveBtn.IsEnabled = $true
             $loadSaveBtn.IsEnabled = $true
-            $importSaveBtn.IsEnabled = $true
+            # $renameSaveBtn.IsEnabled = $true
+            # $deleteSaveBtn.IsEnabled = $true
+            # $importSaveBtn.IsEnabled = $true
             $listBoxRomPaths.IsEnabled = $true
             $addMainPathBtn.IsEnabled = $true
             $modifyMainPathBtn.IsEnabled = $true
@@ -260,10 +266,8 @@ function initRomPath {
     })
 }
 function initSaveList {
-    # $savesList = $window.FindName("savesList")
     $syncSaveBtn = $window.FindName("syncSaveBtn")
     $loadSaveBtn = $window.FindName("loadSaveBtn")
-    # $importSaveBtn = $window.FindName("importSaveBtn")
 
     $syncSaveBtn.Add_Click({
         syncMostRecentSave
@@ -377,6 +381,7 @@ function BuildMainPage {
     $window = [Windows.Markup.XamlReader]::Load($reader)
     $window.SizeToContent = [System.Windows.SizeToContent]::WidthAndHeight
     $window.WindowStartupLocation = [System.Windows.WindowStartupLocation]::CenterScreen
+    $window.Title += " - v$($config.version)"
     
     # Configure backup input listener
     $backupPath = $window.FindName("backupPath")

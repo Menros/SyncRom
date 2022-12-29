@@ -1,39 +1,52 @@
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Window" Title="SyncRom">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Window" Title="SyncRom" ResizeMode="CanMinimize">
 
-    <StackPanel Orientation="Horizontal">
-        <StackPanel Orientation="Vertical" Margin="10">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="backupPathLabel" Text="Backup folder" Margin="2" Width="73" Height="20"/>
-                <TextBox x:Name="backupPath" Width="200" Margin="2" Height="20"/>
-                <Button x:Name="backupPathBtn" Content="Choose Folder" Margin="2" Height="20" Width="81"/>
+    <StackPanel Orientation="Vertical">
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <TextBlock x:Name="backupPathLabel" Text="Backup folder" Margin="0,0,5,0" Width="73" Height="20"/>
+            <TextBox x:Name="backupPath" Width="400" Margin="5,0,5,0" Height="20"/>
+            <Button x:Name="backupPathBtn" Content="Choose Folder" Margin="5,0,0,0" Height="20" Width="81"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <Grid Height="24">
+                    <TextBlock Text="ROMs" Height="20" Margin="2" VerticalAlignment="Center"/>
+                </Grid>
+                <ListBox x:Name="romsList" Height="178" Width="362" Margin="2"></ListBox>
+                <TextBox Name="selectedRomName" Text="" Width="362" Margin="2"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="romsListAddBtn" Content="Add Rom" Margin="2" Height="20" Width="85"/>
+                    <Button x:Name="romsListModifyBtn" Content="Modify Rom" Margin="2" Height="20" Width="85"/>
+                    <Button x:Name="romsListRemoveBtn" Content="Delete Rom" Margin="2" Height="20" Width="85"/>
+                    <Button x:Name="romsListSyncAllBtn" Content="Synchronize All" Margin="2" Height="20" Width="95"/>
+                </StackPanel>
             </StackPanel>
-            <ListBox x:Name="romsList" Height="270" Margin="2"></ListBox>
-            <TextBox Name="selectedRomName" Text="" Margin="2"/>
-            <StackPanel Orientation="Horizontal">
-                <Button x:Name="romsListAddBtn" Content="Add Rom" Margin="2" Height="20" Width="85"/>
-                <Button x:Name="romsListModifyBtn" Content="Modify Rom" Margin="2" Height="20" Width="85"/>
-                <Button x:Name="romsListRemoveBtn" Content="Delete Rom" Margin="2" Height="20" Width="85"/>
-                <Button x:Name="romsListSyncAllBtn" Content="Synchronize All" Margin="2" Height="20" Width="95"/>
+
+
+            <StackPanel Orientation="Vertical" Margin="10">
+                <Grid Height="24">
+                    <TextBlock x:Name="activeRomName" Margin="2" VerticalAlignment="Center"/>
+                    <Button x:Name="syncSaveBtn" Content="Synchronize Latest" Margin="2" Height="20" Width="120" HorizontalAlignment="Right"/>
+                </Grid>
+                <ListBox Name="savesList" HorizontalContentAlignment="Stretch" Height="200" Width="362" Margin="2">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding savedName}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <DockPanel HorizontalAlignment="Left">
+                    <Button x:Name="loadSaveBtn" Content="Load Save" Margin="2" Height="20" Width="81"/>
+                    <!-- <Button x:Name="renameSaveBtn" Content="Rename Save" Margin="2" Height="20" Width="81"/> -->
+                    <!-- <Button x:Name="deleteSaveBtn" Content="Delete Save" Margin="2" Height="20" Width="81"/> -->
+                    <!-- <Button x:Name="importSaveBtn" Content="Import Save" Margin="2" Height="20" Width="81" HorizontalAlignment="Right"/> -->
+                </DockPanel>
+
             </StackPanel>
         </StackPanel>
 
-
-        <StackPanel Orientation="Vertical" Margin="10">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="activeRomName" Margin="2" Height="20"/>
-                <Button x:Name="syncSaveBtn" Content="Sync Latest" Margin="2" Height="20" Width="81"/>
-                <Button x:Name="loadSaveBtn" Content="Load Save" Margin="2" Height="20" Width="81"/>
-                <Button x:Name="importSaveBtn" Content="Import Save" Margin="2" Height="20" Width="81"/>
-            </StackPanel>
-            <ListBox Name="savesList" HorizontalContentAlignment="Stretch" Height="200" Margin="2">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding savedName}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-            <TextBlock Text="Paths to main files"/>
+        <StackPanel Orientation="Vertical" Width="750" Margin="10,0,10,10">
+            <TextBlock Text="Paths to main files" Margin="0,10,0,0" />
             <ListBox Name="listBoxRomPaths" HorizontalContentAlignment="Stretch" Height="70" Margin="2">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -42,14 +55,14 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <TextBox Name="selectedRomPath" Text="" Margin="2"/>
-            <StackPanel Orientation="Horizontal">
+            <DockPanel>
                 <Button x:Name="addMainPathBtn" Content="Add" Margin="2" Height="20" Width="81"/>
                 <Button x:Name="modifyMainPathBtn" Content="Modify" Margin="2" Height="20" Width="81"/>
                 <Button x:Name="deleteMainPathBtn" Content="Delete" Margin="2" Height="20" Width="81"/>
-                <Button x:Name="cancelMainPathBtn" Content="Cancel" Margin="2" Height="20" Width="81"/>
-            </StackPanel>
-
+                <Button x:Name="cancelMainPathBtn" Content="Cancel" Margin="2" Height="20" Width="81" HorizontalAlignment="Right"/>
+            </DockPanel>
         </StackPanel>
+
     </StackPanel>
 
 </Window>
