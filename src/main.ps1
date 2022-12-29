@@ -42,7 +42,7 @@ function secureConfigNotConfigured {
     $modifyMainPathBtn.IsEnabled = $false
     $deleteMainPathBtn.IsEnabled = $false
 
-    # if config selected, enable capacity to add rom
+    # if backup folder selected, enable capacity to add rom
     if ($config.backup -ne "") {
         $romsList.IsEnabled = $true
         $romsListAddBtn.IsEnabled = $true
@@ -106,6 +106,27 @@ function actionAddRom {
     secureConfigNotConfigured
 }
 function actionModifyRom {
+    $romsList = $window.FindName("romsList")
+    $selectedRomName = $window.FindName("selectedRomName")
+    $selectedRomIndex = $romsList.SelectedIndex
+    if ($selectedRomName.Text -eq "") {return}
+
+    # Rename or create the backup folder
+    if (Test-Path "$($config.backup)\$($romsList.SelectedItem)") {
+        Rename-Item "$($config.backup)\$($romsList.SelectedItem)" $selectedRomName.Text | Out-Null
+    }
+    else {
+        New-Item "$($config.backup)\$($romsList.SelectedItem)" -ItemType Directory | Out-Null
+    }
+
+    # Update config and view
+    $romsList.Items[$selectedRomIndex] = $selectedRomName.Text
+    $config.ROMs[$selectedRomIndex].name = $selectedRomName.Text
+    $romsList.SelectedIndex = $selectedRomIndex
+    saveConfig
+    loadSelectedRom
+    # Reset form
+    $selectedRomName.Text = ""
     secureConfigNotConfigured
 }
 function actionDeleteRom {
