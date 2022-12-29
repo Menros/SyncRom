@@ -5,14 +5,15 @@
                  {
                      "name":  "Pokemon Violet",
                      "paths":  [
-                                   "C:\\Users\\Menros\\Documents\\SyncRom\\Roms\\Ryujinx\\main",
-                                   "C:\\Users\\Menros\\Documents\\SyncRoms\\Roms\\Yuzu\\main"
+                                   "C:\\Users\\Menros\\Documents\\SyncRom\\Roms\\Ryujinx\\000000000001\\main",
+                                   "C:\\Users\\Menros\\Documents\\SyncRom\\Roms\\Yuzu\\000000000001\\main"
                                ]
                  },
                  {
                      "name":  "Pokemon Legends Arceus",
                      "paths":  [
-                                   "C:\\Users\\Menros\\Documents\\SyncRom\\Roms\\Ryujinx\\main"
+                                   "C:\\Users\\Menros\\Documents\\SyncRom\\Roms\\Ryujinx\\000000000002\\main",
+                                   "C:\\Users\\Menros\\Documents\\SyncRom\\Roms\\Yuzu\\000000000002\\main"
                                ]
                  }
              ]

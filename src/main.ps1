@@ -10,6 +10,9 @@ function getConfig {
 function saveConfig {
     $config | ConvertTo-Json -Depth 3 | Set-Content .\config.json
 }
+function secureConfigNotConfigured {
+    return (($romsList.SelectedIndex -eq -1) -or ($null -eq $config.backup) -or ($config.backup -eq ""))
+}
 
 function selectBackupPathDialog {
     $objForm = New-Object System.Windows.Forms.FolderBrowserDialog
@@ -76,6 +79,17 @@ function initRomsList {
     loadSelectedRom
 }
 
+function checkMainPathValidity {
+    $selectedRomPath = $window.FindName("selectedRomPath")
+    if (-not($selectedRomPath.Text -like "*\main")) {
+        if (-not($selectedRomPath.Text -like "*\")) {
+            $selectedRomPath.Text += "\main"
+        }
+        else {
+            $selectedRomPath.Text += "main"
+        }
+    }
+}
 function initRomPath {
     $addMainPathBtn = $window.FindName("addMainPathBtn")
     $modifyMainPathBtn = $window.FindName("modifyMainPathBtn")
@@ -83,6 +97,7 @@ function initRomPath {
     $cancelMainPathBtn = $window.FindName("cancelMainPathBtn")
     
     $addMainPathBtn.Add_Click({
+        checkMainPathValidity
         $listBoxRomPaths = $window.FindName("listBoxRomPaths")
         $selectedRomPath = $window.FindName("selectedRomPath")
         if ($selectedRomPath.Text -ne "") {
@@ -93,6 +108,7 @@ function initRomPath {
         }
     })
     $modifyMainPathBtn.Add_Click({
+        checkMainPathValidity
         $listBoxRomPaths = $window.FindName("listBoxRomPaths")
         $selectedRomPath = $window.FindName("selectedRomPath")
         if ($listBoxRomPaths.SelectedIndex -ne -1) {
@@ -140,6 +156,7 @@ function initSaveList {
 }
 
 function loadSelectedRom {
+    if (secureConfigNotConfigured) {return}
     # Get Rom info from config.json
     $activeRom = $config.ROMs[$romsList.SelectedIndex]
     
@@ -183,6 +200,7 @@ function syncAll {
     $romsList.SelectedIndex = $savedActive
 }
 function syncMostRecentSave {
+    if (secureConfigNotConfigured) {return}
     $activeRom = $config.ROMs[$romsList.SelectedIndex]
     # Create game backup folder
     $backupGamePath = "$($config.backup)\$($activeRom.name)"
@@ -223,8 +241,7 @@ function syncLoadSelectedSave {
     # Synchronise all folders
     $activeRom = $config.ROMs[$romsList.SelectedIndex]
     For($pathI=0;$pathI -lt $activeRom.paths.length;$pathI++) {
-        $syncPath = (Get-Item $activeRom.paths[$pathI]).DirectoryName
-        Copy-Item $saveMainPath -Destination $syncPath -Force
+        Copy-Item $saveMainPath -Destination $activeRom.paths[$pathI] -Force
     }
 }
 
