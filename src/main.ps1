@@ -11,7 +11,56 @@ function saveConfig {
     $config | ConvertTo-Json -Depth 3 | Set-Content .\config.json
 }
 function secureConfigNotConfigured {
-    return (($romsList.SelectedIndex -eq -1) -or ($null -eq $config.backup) -or ($config.backup -eq ""))
+    $romsList = $window.FindName("romsList")
+    $romsListAddBtn = $window.FindName("romsListAddBtn")
+    $romsListModifyBtn = $window.FindName("romsListModifyBtn")
+    $romsListRemoveBtn = $window.FindName("romsListRemoveBtn")
+    $romsListSyncAllBtn = $window.FindName("romsListSyncAllBtn")
+
+    $savesList = $window.FindName("savesList")
+    $syncSaveBtn = $window.FindName("syncSaveBtn")
+    $loadSaveBtn = $window.FindName("loadSaveBtn")
+    $importSaveBtn = $window.FindName("importSaveBtn")
+
+    $listBoxRomPaths = $window.FindName("listBoxRomPaths")
+    $addMainPathBtn = $window.FindName("addMainPathBtn")
+    $modifyMainPathBtn = $window.FindName("modifyMainPathBtn")
+    $deleteMainPathBtn = $window.FindName("deleteMainPathBtn")
+
+    # Init all elements to disabled
+    $romsList.IsEnabled = $false
+    $romsListAddBtn.IsEnabled = $false
+    $romsListModifyBtn.IsEnabled = $false
+    $romsListRemoveBtn.IsEnabled = $false
+    $romsListSyncAllBtn.IsEnabled = $false
+    $savesList.IsEnabled = $false
+    $syncSaveBtn.IsEnabled = $false
+    $loadSaveBtn.IsEnabled = $false
+    $importSaveBtn.IsEnabled = $false
+    $listBoxRomPaths.IsEnabled = $false
+    $addMainPathBtn.IsEnabled = $false
+    $modifyMainPathBtn.IsEnabled = $false
+    $deleteMainPathBtn.IsEnabled = $false
+
+    # if config selected, enable capacity to add rom
+    if ($config.backup -ne "") {
+        $romsList.IsEnabled = $true
+        $romsListAddBtn.IsEnabled = $true
+        $romsListModifyBtn.IsEnabled = $true
+        $romsListRemoveBtn.IsEnabled = $true
+        # if a rom exists and is selected, add capacity to sync
+        if (($romsList.SelectedIndex -ne -1)) {
+            $romsListSyncAllBtn.IsEnabled = $true
+            $savesList.IsEnabled = $true
+            $syncSaveBtn.IsEnabled = $true
+            $loadSaveBtn.IsEnabled = $true
+            $importSaveBtn.IsEnabled = $true
+            $listBoxRomPaths.IsEnabled = $true
+            $addMainPathBtn.IsEnabled = $true
+            $modifyMainPathBtn.IsEnabled = $true
+            $deleteMainPathBtn.IsEnabled = $true
+        }
+    }
 }
 
 function selectBackupPathDialog {
@@ -29,10 +78,10 @@ function setBackupPath {
     $backupPath.Text = $path
     $config.backup = $path
     saveConfig
+    secureConfigNotConfigured
 }
 
 function actionAddRom {
-    if (secureConfigNotConfigured) {return}
     $romsList = $window.FindName("romsList")
     $selectedRomName = $window.FindName("selectedRomName")
     if ($selectedRomName.Text -eq "") {return}
@@ -54,12 +103,13 @@ function actionAddRom {
     loadSelectedRom
     # Reset form
     $selectedRomName.Text = ""
+    secureConfigNotConfigured
 }
 function actionModifyRom {
-    if (secureConfigNotConfigured) {return}
+    secureConfigNotConfigured
 }
 function actionDeleteRom {
-    if (secureConfigNotConfigured) {return}
+    secureConfigNotConfigured
 }
 function initRomsList {
     $romsListSyncAllBtn = $window.FindName("romsListSyncAllBtn")
@@ -80,8 +130,10 @@ function initRomsList {
     For($i=0 ; $i -lt $config.ROMs.length ; $i++) {
         $romsList.AddChild($config.ROMs[$i].name)
     }
-    $romsList.SelectedIndex = 0
-    loadSelectedRom
+    if ($romsList.Items.Count -ne 0) {
+        $romsList.SelectedIndex = 0
+        loadSelectedRom
+    }
 }
 
 function checkMainPathValidity {
@@ -103,7 +155,6 @@ function initRomPath {
     $cancelMainPathBtn = $window.FindName("cancelMainPathBtn")
     
     $addMainPathBtn.Add_Click({
-        if (secureConfigNotConfigured) {return}
         checkMainPathValidity
         $listBoxRomPaths = $window.FindName("listBoxRomPaths")
         $selectedRomPath = $window.FindName("selectedRomPath")
@@ -115,7 +166,6 @@ function initRomPath {
         }
     })
     $modifyMainPathBtn.Add_Click({
-        if (secureConfigNotConfigured) {return}
         checkMainPathValidity
         $listBoxRomPaths = $window.FindName("listBoxRomPaths")
         $selectedRomPath = $window.FindName("selectedRomPath")
@@ -127,7 +177,6 @@ function initRomPath {
         }
     })
     $deleteMainPathBtn.Add_Click({
-        if (secureConfigNotConfigured) {return}
         $listBoxRomPaths = $window.FindName("listBoxRomPaths")
         $selectedRomPath = $window.FindName("selectedRomPath")
         if ($listBoxRomPaths.SelectedIndex -eq -1) {
@@ -165,7 +214,7 @@ function initSaveList {
 }
 
 function loadSelectedRom {
-    if (secureConfigNotConfigured) {return}
+    if ($romsList.SelectedIndex -eq -1) {return}
     # Get Rom info from config.json
     $activeRom = $config.ROMs[$romsList.SelectedIndex]
     
@@ -209,7 +258,6 @@ function syncAll {
     $romsList.SelectedIndex = $savedActive
 }
 function syncMostRecentSave {
-    if (secureConfigNotConfigured) {return}
     $activeRom = $config.ROMs[$romsList.SelectedIndex]
     # Create game backup folder
     $backupGamePath = "$($config.backup)\$($activeRom.name)"
@@ -282,6 +330,8 @@ function BuildMainPage {
     $romsList.add_SelectionChanged({loadSelectedRom})
     
     initSaveList
+
+    secureConfigNotConfigured
     
     $window.ShowDialog() | Out-Null
 }

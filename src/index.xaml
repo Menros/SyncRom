@@ -25,7 +25,6 @@
                 <Button x:Name="loadSaveBtn" Content="Load Save" Margin="2" Height="20" Width="81"/>
                 <Button x:Name="importSaveBtn" Content="Import Save" Margin="2" Height="20" Width="81" IsEnabled="False"/>
             </StackPanel>
-            <!-- <ListBox x:Name="savesList"></ListBox> -->
             <ListBox Name="savesList" HorizontalContentAlignment="Stretch" Height="200" Margin="2">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
