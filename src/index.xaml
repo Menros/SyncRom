@@ -11,8 +11,8 @@
             <TextBox Name="selectedRomName" Text="" Margin="2"/>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="romsListAddBtn" Content="Add Rom" Margin="2" Height="20" Width="85"/>
-                <Button x:Name="romsListModifyBtn" Content="Modify Rom" Margin="2" Height="20" Width="85" IsEnabled="False"/>
-                <Button x:Name="romsListRemoveBtn" Content="Delete Rom" Margin="2" Height="20" Width="85" IsEnabled="False"/>
+                <Button x:Name="romsListModifyBtn" Content="Modify Rom" Margin="2" Height="20" Width="85"/>
+                <Button x:Name="romsListRemoveBtn" Content="Delete Rom" Margin="2" Height="20" Width="85"/>
                 <Button x:Name="romsListSyncAllBtn" Content="Synchronize All" Margin="2" Height="20" Width="95"/>
             </StackPanel>
         </StackPanel>
@@ -23,7 +23,7 @@
                 <TextBlock x:Name="activeRomName" Margin="2" Height="20"/>
                 <Button x:Name="syncSaveBtn" Content="Sync Latest" Margin="2" Height="20" Width="81"/>
                 <Button x:Name="loadSaveBtn" Content="Load Save" Margin="2" Height="20" Width="81"/>
-                <Button x:Name="importSaveBtn" Content="Import Save" Margin="2" Height="20" Width="81" IsEnabled="False"/>
+                <Button x:Name="importSaveBtn" Content="Import Save" Margin="2" Height="20" Width="81"/>
             </StackPanel>
             <ListBox Name="savesList" HorizontalContentAlignment="Stretch" Height="200" Margin="2">
                 <ListBox.ItemTemplate>

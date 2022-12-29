@@ -129,7 +129,50 @@ function actionModifyRom {
     $selectedRomName.Text = ""
     secureConfigNotConfigured
 }
+function actionDeleteRomDeleteConfig {
+    $romsList = $window.FindName("romsList")
+    $selectedRomName = $window.FindName("selectedRomName")
+    # Delete rom in config
+    $newROMs = @()
+    for ($i = 0; $i -lt $config.ROMs.Count; $i++) {
+        if ($i -ne $romsList.SelectedIndex) {
+            $newROMs += [PSCustomObject]@{
+                name=$config.ROMs[$i].name
+                paths=$config.ROMs[$i].paths
+            }
+        }
+    }
+    $config.ROMs = $newROMs
+    saveConfig
+
+    # Delete rom in romsList
+    $romsList.Items.RemoveAt($romsList.SelectedIndex)
+
+    # select first rom
+    if ($romsList.Items.Count -ne 0) {
+        $romsList.SelectedIndex = 0
+        loadSelectedRom
+    }
+    # Reset form
+    $selectedRomName.Text = ""
+    secureConfigNotConfigured
+}
 function actionDeleteRom {
+    $romsList = $window.FindName("romsList")
+    $msgBoxInput = [System.Windows.MessageBox]::Show(
+        "Would you like to delete corresponding backup folder ?` $($config.backup)\$($romsList.SelectedItem)",
+        "Delete $($romsList.SelectedItem)",
+        'YesNoCancel',
+        'Question')
+    switch  ($msgBoxInput) {
+        'Yes' {
+            Remove-Item "$($config.backup)\$($romsList.SelectedItem)" -Recurse
+            # (Get-Item "$($config.backup)\$($romsList.SelectedItem)").Delete()
+            actionDeleteRomDeleteConfig
+        }
+        'No' {actionDeleteRomDeleteConfig}
+        'Cancel' {}
+    }
     secureConfigNotConfigured
 }
 function initRomsList {
