@@ -166,7 +166,7 @@ function actionDeleteRomDeleteConfig {
 function actionDeleteRom {
     $romsList = $window.FindName("romsList")
     $msgBoxInput = [System.Windows.MessageBox]::Show(
-        "Would you like to delete corresponding backup folder ?` $($config.backup)\$($romsList.SelectedItem)",
+        "Would you like to delete corresponding backup folder ?`n $($config.backup)\$($romsList.SelectedItem)",
         "Delete $($romsList.SelectedItem)",
         'YesNoCancel',
         'Question')
@@ -273,7 +273,21 @@ function initSaveList {
     $importSaveBtn = $window.FindName("importSaveBtn")
 
     $syncSaveBtn.Add_Click({
-        syncMostRecentSave
+        $savesList = $window.FindName("savesList")
+        $msgBoxInput = [System.Windows.MessageBox]::Show(
+            "Override backup '$($savesList.SelectedItem.savedName)' ?`n (If No, a new backup will be generated)",
+            "Override backup ?",
+            'YesNoCancel',
+            'Question')
+        switch  ($msgBoxInput) {
+            'Yes' {
+                syncMostRecentSave (Get-Item $savesList.SelectedItem.savedPath).Directory
+            }
+            'No' {
+                syncMostRecentSave
+            }
+            'Cancel' {}
+        }
         loadSelectedRom
     })
 
@@ -296,8 +310,8 @@ function initSaveList {
         $savesList = $window.FindName("savesList")
         $msgBoxInput = [System.Windows.MessageBox]::Show(
             "Would you like to delete $($savesList.SelectedItem.savedName) ?",
-            "Delete $($savesList.SelectedItem.savedName)",
-            'YesNoCancel',
+            "Delete backup",
+            'OKCancel',
             'Question')
         switch  ($msgBoxInput) {
             'Yes' {
@@ -381,6 +395,7 @@ function syncAll {
     $romsList.SelectedIndex = $savedActive
 }
 function syncMostRecentSave {
+    param($backupGamePathOverride)
     $activeRom = $config.ROMs[$romsList.SelectedIndex]
     # Create game backup folder
     $backupGamePath = "$($config.backup)\$($activeRom.name)"
@@ -404,7 +419,10 @@ function syncMostRecentSave {
     
     if($lastBackup.LastWriteTime -lt $mostRecentDate) {
         # Create backup folder
-        $backupGamePath = "$($backupGamePath)\$(Get-Date -Format "dd-MM-yyyy-HHmm")"
+        if ($null -ne $backupGamePathOverride)
+                { $backupGamePath = $backupGamePathOverride }
+        else    { $backupGamePath = "$($backupGamePath)\$(Get-Date -Format "dd-MM-yyyy-HHmm")" }
+        Write-Host $backupGamePath
         New-Item -Path $backupGamePath -ItemType Directory -Force | Out-Null
         
         # Copy most recent to backup directory
@@ -412,6 +430,9 @@ function syncMostRecentSave {
     }
     else {
         $backupGamePath = $lastBackup.DirectoryName
+        if ($null -ne $backupGamePathOverride) {
+            Copy-Item "$($backupGamePath)\main" -Destination $backupGamePathOverride -Force
+        }
     }
     
     syncLoadSelectedSave "$($backupGamePath)\main"
