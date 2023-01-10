@@ -20,9 +20,9 @@ function secureConfigNotConfigured {
     $savesList = $window.FindName("savesList")
     $syncSaveBtn = $window.FindName("syncSaveBtn")
     $loadSaveBtn = $window.FindName("loadSaveBtn")
-    # $renameSaveBtn = $window.FindName("renameSaveBtn")
-    # $deleteSaveBtn = $window.FindName("deleteSaveBtn")
-    # $importSaveBtn = $window.FindName("importSaveBtn")
+    $renameSaveBtn = $window.FindName("renameSaveBtn")
+    $deleteSaveBtn = $window.FindName("deleteSaveBtn")
+    $importSaveBtn = $window.FindName("importSaveBtn")
 
     $listBoxRomPaths = $window.FindName("listBoxRomPaths")
     $addMainPathBtn = $window.FindName("addMainPathBtn")
@@ -38,9 +38,9 @@ function secureConfigNotConfigured {
     $savesList.IsEnabled = $false
     $syncSaveBtn.IsEnabled = $false
     $loadSaveBtn.IsEnabled = $false
-    # $renameSaveBtn.IsEnabled = $false
-    # $deleteSaveBtn.IsEnabled = $false
-    # $importSaveBtn.IsEnabled = $false
+    $renameSaveBtn.IsEnabled = $false
+    $deleteSaveBtn.IsEnabled = $false
+    $importSaveBtn.IsEnabled = $false
     $listBoxRomPaths.IsEnabled = $false
     $addMainPathBtn.IsEnabled = $false
     $modifyMainPathBtn.IsEnabled = $false
@@ -58,9 +58,9 @@ function secureConfigNotConfigured {
             $savesList.IsEnabled = $true
             $syncSaveBtn.IsEnabled = $true
             $loadSaveBtn.IsEnabled = $true
-            # $renameSaveBtn.IsEnabled = $true
-            # $deleteSaveBtn.IsEnabled = $true
-            # $importSaveBtn.IsEnabled = $true
+            $renameSaveBtn.IsEnabled = $true
+            $deleteSaveBtn.IsEnabled = $true
+            $importSaveBtn.IsEnabled = $true
             $listBoxRomPaths.IsEnabled = $true
             $addMainPathBtn.IsEnabled = $true
             $modifyMainPathBtn.IsEnabled = $true
@@ -268,6 +268,9 @@ function initRomPath {
 function initSaveList {
     $syncSaveBtn = $window.FindName("syncSaveBtn")
     $loadSaveBtn = $window.FindName("loadSaveBtn")
+    $renameSaveBtn = $window.FindName("renameSaveBtn")
+    $deleteSaveBtn = $window.FindName("deleteSaveBtn")
+    $importSaveBtn = $window.FindName("importSaveBtn")
 
     $syncSaveBtn.Add_Click({
         syncMostRecentSave
@@ -278,6 +281,58 @@ function initSaveList {
         $savesList = $window.FindName("savesList")
         syncLoadSelectedSave $savesList.SelectedItem.savedPath
         loadSelectedRom
+    })
+    $renameSaveBtn.Add_Click({
+        $selectedSaveName = $window.FindName("selectedSaveName")
+        if ($selectedSaveName.Text -eq "") {return}
+        $savesList = $window.FindName("savesList")
+        $svListIndex = $savesList.SelectedIndex
+        Rename-Item -Path (Get-Item $savesList.SelectedItem.savedPath).Directory -NewName $selectedSaveName.Text
+        loadSelectedRom
+        $savesList.SelectedIndex = $svListIndex
+        $selectedSaveName.Text = ""
+    })
+    $deleteSaveBtn.Add_Click({
+        $savesList = $window.FindName("savesList")
+        $msgBoxInput = [System.Windows.MessageBox]::Show(
+            "Would you like to delete $($savesList.SelectedItem.savedName) ?",
+            "Delete $($savesList.SelectedItem.savedName)",
+            'YesNoCancel',
+            'Question')
+        switch  ($msgBoxInput) {
+            'Yes' {
+                $svListIndex = $savesList.SelectedIndex
+                Remove-Item (Get-Item $savesList.SelectedItem.savedPath).Directory -Recurse
+                loadSelectedRom
+                $savesList.SelectedIndex = $svListIndex
+            }
+            'No' {}
+            'Cancel' {}
+        }
+    })
+    $importSaveBtn.Add_Click({
+        $savesList = $window.FindName("savesList")
+        $activeRom = $config.ROMs[$window.FindName("romsList").SelectedIndex]
+        $objForm = New-Object System.Windows.Forms.OpenFileDialog -Property @{
+            Title = 'Select main file'
+            InitialDirectory = [Environment]::GetFolderPath('Desktop')
+            Filter = "All files (*.*)|*.*"
+        }
+        
+        if ($objForm.ShowDialog() -eq "OK") {
+            $importedName = "Imported-$(Get-Date -Format "dd-MM-yyyy-HHmmss")"
+            $importedPath = "$($config.backup)\$($activeRom.name)\$($importedName)"
+            New-Item -Path $importedPath -ItemType Directory | Out-Null
+            Copy-Item $objForm.FileName -Destination "$($importedPath)\main" -Force
+
+            $srom = [PSCustomObject]@{
+                savedName=$importedName
+                savedPath="$($importedPath)\main"
+            }
+            Write-Host $srom
+            $savesList.AddChild($srom)
+        }
+        
     })
 }
 

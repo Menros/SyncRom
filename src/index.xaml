@@ -12,7 +12,7 @@
                 <Grid Height="24">
                     <TextBlock Text="ROMs" Height="20" Margin="2" VerticalAlignment="Center"/>
                 </Grid>
-                <ListBox x:Name="romsList" Height="178" Width="362" Margin="2"></ListBox>
+                <ListBox x:Name="romsList" Height="200" Width="362" Margin="2"></ListBox>
                 <TextBox Name="selectedRomName" Text="" Width="362" Margin="2"/>
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="romsListAddBtn" Content="Add Rom" Margin="2" Height="20" Width="85"/>
@@ -35,11 +35,12 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <DockPanel HorizontalAlignment="Left">
-                    <Button x:Name="loadSaveBtn" Content="Load Save" Margin="2" Height="20" Width="81"/>
-                    <!-- <Button x:Name="renameSaveBtn" Content="Rename Save" Margin="2" Height="20" Width="81"/> -->
-                    <!-- <Button x:Name="deleteSaveBtn" Content="Delete Save" Margin="2" Height="20" Width="81"/> -->
-                    <!-- <Button x:Name="importSaveBtn" Content="Import Save" Margin="2" Height="20" Width="81" HorizontalAlignment="Right"/> -->
+                <TextBox Name="selectedSaveName" Text="" Width="362" Margin="2"/>
+                <DockPanel>
+                    <Button x:Name="loadSaveBtn" Content="Load Save" Margin="2" Height="20" Width="81" HorizontalAlignment="Left"/>
+                    <Button x:Name="renameSaveBtn" Content="Rename Save" Margin="2" Height="20" Width="81" HorizontalAlignment="Left"/>
+                    <Button x:Name="deleteSaveBtn" Content="Delete Save" Margin="2" Height="20" Width="81" HorizontalAlignment="Left"/>
+                    <Button x:Name="importSaveBtn" Content="Import Save" Margin="2" Height="20" Width="81" HorizontalAlignment="Right"/>
                 </DockPanel>
 
             </StackPanel>
